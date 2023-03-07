@@ -9,9 +9,13 @@ const {
 const {
     Server: IOServer
 } = require("socket.io");
+
+
+
 //-------------------------------------------------------------------------------------------------------//
 //Dotenv y yargs//
 //-------------------------------------------------------------------------------------------------------//
+
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -200,13 +204,37 @@ passport.deserializeUser((username, done) => {
         done(null, res);
     });
 });
+//-------------------------------------------------------------------------------------------------------//
+//Mail nodemailer gmail//
+//-------------------------------------------------------------------------------------------------------//
+const nodemailer = require("nodemailer")
+ const MAIL_ADDRESS = process.env.MAIL_ADDRESS;
+ const MAIL_PASS = process.env.MAIL_PASS;
+ 
+ const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth:{
+        user: "wocaso123@gmail.com",
+        pass: "bfgkxkjayvvetjfj"
+    }
+ });
 
-
-
-
-
-
-
+//  const emailContent = {
+//     from: "E-comerce Busato Gabriel",
+//     to:"wocaso123@gmail.com",
+//     subject: "Nuevo Registro",
+//     text: "Ha habido un nuevo registro en la pagina",
+//     html: "<h1>holis</h1>"
+//  }
+ async function sendEmail(mail){
+    try{
+        const info = await transporter.sendMail(mail)
+        infoLogger.info(info)
+     }catch(error){
+        warnLogger.warn(error);
+     }
+ }
 //-------------------------------------------------------------------------------------------------------//
 //Inicializacion del server y gets.//
 //-------------------------------------------------------------------------------------------------------//
@@ -214,6 +242,7 @@ passport.deserializeUser((username, done) => {
 httpServer.listen(PORT, () => {
     infoLogger.info("servidor escuchando en el puerto " + PORT);
 });
+let userInfo
 
 
 
@@ -226,9 +255,27 @@ app.post(
     "/register",
     passport.authenticate("register", {
         failureRedirect: "/failregister",
-        successRedirect: "/datos",
+        successRedirect: "/registerSucces",
     })
 );
+app.get("/registerSucces", (req, res) => {
+    mongooseDBusers.getByUser(req.session.passport.user).then((res) => {
+        if(res != undefined){
+            userInfo = res        
+        }
+    }).then(()=>{
+        const emailContent = {
+            from: "E-comerce Busato Gabriel",
+            to:"wocaso123@gmail.com",
+            subject: "Nuevo Registro",
+            text: "Ha habido un nuevo registro en la pagina",
+            html: `<h1>nombre: ${userInfo[0].name}</h1><br><h1>mail: ${userInfo[0].username}</h1><br><h1>Edad: ${userInfo[0].age}</h1><br><h1>Direccion: ${userInfo[0].dir}</h1><br><h1>Telefono: ${userInfo[0].phone}</h1><br><h1>imagen: ${userInfo[0].picture}</h1>`    
+         }
+         sendEmail(emailContent);
+        res.redirect("/datos");
+    });
+    
+});
 
 app.get("/failregister", (req, res) => {
     res.render("register-error");
@@ -264,17 +311,19 @@ app.get("/faillogin", (req, res) => {
 //----------------------------//
 //    Rutas datos
 //----------------------------//
-let userInfo
-app.get("/datos", requireAuthentication, (req, res) => {
-    res.render("datos", {
-        user: req.session.passport.user
-    });
+app.get("/datos", requireAuthentication, (req, res) => { 
     mongooseDBusers.getByUser(req.session.passport.user).then((res) => {
         if(res != undefined){
-            userInfo = res;
+            userInfo = res        
         }
+    }).then(()=>{
+        res.render("datos", {
+            user: req.session.passport.user
+        });
     });
-    console.log(userInfo)
+    
+
+
 
 
     showReqDataInfo(req)

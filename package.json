@@ -8,6 +8,7 @@
     "express-handlebars": "^7.0.1",
     "express-session": "^1.17.3",
     "mongoose": "^7.0.0",
+    "nodemailer": "^6.9.1",
     "nodemon": "^2.0.21",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",

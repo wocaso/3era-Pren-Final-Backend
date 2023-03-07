@@ -92,7 +92,7 @@ class MongooseContainerUsuarios{
       try{
         await this.#connectDB()
           const usuario = await this.model.find({username: user});
-          return usuario
+          return await usuario
       }catch(error){
         errorLogger.error(error)
       }finally {
