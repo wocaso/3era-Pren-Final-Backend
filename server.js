@@ -9,9 +9,6 @@ const {
 const {
     Server: IOServer
 } = require("socket.io");
-
-
-
 //-------------------------------------------------------------------------------------------------------//
 //Dotenv y yargs//
 //-------------------------------------------------------------------------------------------------------//
@@ -49,6 +46,24 @@ const io = new IOServer(httpServer);
 app.use(express.static("./public"));
 
 //-------------------------------------------------------------------------------------------------------//
+//Cluster y fork//
+//-------------------------------------------------------------------------------------------------------//
+const cluster = require("cluster");
+const os = require("os");
+let numCpus = os.cpus().length;
+
+if (MODE == "CLUSTER" && cluster.isMaster) {
+  console.log(numCpus);
+  for (let i = 0; i < numCpus; i++) {
+    cluster.fork();
+  }
+  cluster.on("exit", (worker) => {
+    cluster.fork();
+  });
+
+  //dato importante: este "else" llega hasta el final del archivo.
+} else {
+    //-------------------------------------------------------------------------------------------------------//
 //Bcrypt//
 //-------------------------------------------------------------------------------------------------------//
 const bcrypt = require("bcrypt");
@@ -83,7 +98,8 @@ app.use(express.json());
 //twilo//
 //-------------------------------------------------------------------------------------------------------//
 const accountSid = "ACb61cac25c8983d5a6793834419ecb3d8"
-const authToken = "5e9fd471b929a13f4b8deafea5d6308a"
+//DEJO COMENTADO EL AUTH POR QUE SINO TWILO ME LO BAJA AL CODIGO
+// const authToken = "816c63deb07995a448e25fee168ad39b"
 const client = require("twilio")(accountSid, authToken)
 
 //-------------------------------------------------------------------------------------------------------//
@@ -272,7 +288,7 @@ app.get("/registerSucces", (req, res) => {
     }).then(()=>{
         const emailContent = {
             from: "E-comerce Busato Gabriel",
-            to:"wocaso123@gmail.com",
+            to:MAIL_ADDRESS,
             subject: "Nuevo Registro",
             text: "Ha habido un nuevo registro en la pagina",
             html: `<h1>nombre: ${userInfo[0].name}</h1><br><h1>mail: ${userInfo[0].username}</h1><br><h1>Edad: ${userInfo[0].age}</h1><br><h1>Direccion: ${userInfo[0].dir}</h1><br><h1>Telefono: ${userInfo[0].phone}</h1><br><h1>imagen: ${userInfo[0].picture}</h1>`    
@@ -366,7 +382,7 @@ app.get("/checkout", (req, res) => {
     const jsonString = JSON.stringify(searchToCart(itemss, cart))
     const emailContent = {
         from: "E-comerce Busato Gabriel",
-        to:"wocaso123@gmail.com",
+        to:MAIL_ADDRESS,
         subject: `Nuevo pedido de ${userInfo[0].username} de nombre ${userInfo[0].name}`,
         text: "Nuevo pedido",
         html: `<h1>${jsonString}</h1><br>`    
@@ -452,3 +468,10 @@ function searchToCart(array, IDarray){
     })
     return realCart;
 }
+
+}
+
+
+
+
+
