@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
         dir: String,
         phone: String,
         picture: String,
+
     })
 
 const usuarios = mongoose.model(usuariosCollection, UserSchema)

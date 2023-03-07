@@ -79,6 +79,12 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.json());
+//-------------------------------------------------------------------------------------------------------//
+//twilo//
+//-------------------------------------------------------------------------------------------------------//
+const accountSid = "ACb61cac25c8983d5a6793834419ecb3d8"
+const authToken = "5e9fd471b929a13f4b8deafea5d6308a"
+const client = require("twilio")(accountSid, authToken)
 
 //-------------------------------------------------------------------------------------------------------//
 //Compression y winston//
@@ -207,16 +213,16 @@ passport.deserializeUser((username, done) => {
 //-------------------------------------------------------------------------------------------------------//
 //Mail nodemailer gmail//
 //-------------------------------------------------------------------------------------------------------//
-const nodemailer = require("nodemailer")
- const MAIL_ADDRESS = process.env.MAIL_ADDRESS;
- const MAIL_PASS = process.env.MAIL_PASS;
+const nodemailer = require("nodemailer");
+ const MAIL_ADDRESS = "wocaso123@gmail.com";
+ const MAIL_PASS = "bfgkxkjayvvetjfj";
  
  const transporter = nodemailer.createTransport({
     service: "gmail",
     port: 587,
     auth:{
-        user: "wocaso123@gmail.com",
-        pass: "bfgkxkjayvvetjfj"
+        user: MAIL_ADDRESS,
+        pass: MAIL_PASS
     }
  });
 
@@ -339,6 +345,7 @@ app.get("/buyersInfo", requireAuthentication, (req, res) => {
         dir: userInfo[0].dir,
         picture: userInfo[0].picture,
         phone: userInfo[0].phone,
+        cart: cart,
     });
     showReqDataInfo(req)
 });
@@ -351,6 +358,36 @@ app.get("/logout", (req, res) => {
     req.logout((err) => {
         res.redirect("/login");
     });
+});
+//----------------------------//
+//    Ruta checkout
+//----------------------------//
+app.get("/checkout", (req, res) => {
+    const jsonString = JSON.stringify(searchToCart(itemss, cart))
+    const emailContent = {
+        from: "E-comerce Busato Gabriel",
+        to:"wocaso123@gmail.com",
+        subject: `Nuevo pedido de ${userInfo[0].username} de nombre ${userInfo[0].name}`,
+        text: "Nuevo pedido",
+        html: `<h1>${jsonString}</h1><br>`    
+     }
+     sendEmail(emailContent);
+    client.messages
+    .create({
+        body: `Nuevo pedido de ${userInfo[0].username} de nombre ${userInfo[0].name}`,
+        from: 'whatsapp:+14155238886',
+        to: 'whatsapp:+5493541337569'
+    })
+    .then(message => console.log(message.sid))
+    client.messages
+    .create({
+        body: `Gracias por su compra ${userInfo[0].name} esta esta siendo procesada para ser enviada`,
+        from: 'whatsapp:+14155238886',
+        to: `whatsapp:+54${userInfo[0].phone}`
+    })
+    .then(message => console.log(message.sid))
+    res.render("checkout");
+
 });
 
 //----------------------------//
@@ -368,6 +405,7 @@ app.get("*", (req, res) => {
 io.on("connection", (socket) => {
     console.log("un cliente se ha conectado");
     socket.emit("products", itemss);
+    socket.emit("productsUser", searchToCart(itemss, cart));
     socket.on("new-producto", (data) => {
         itemss.push(data);
         socket.emit("products", itemss);
@@ -400,3 +438,17 @@ const itemss = [{
         thumbnail: 'https://cdn1.iconfinder.com/data/icons/kitchen-and-food-2/44/blender-512.png'
     }
 ];
+
+const cart = [2,2,2,4];
+
+function searchToCart(array, IDarray){
+    const realCart = [];
+    IDarray.map(ID=>{
+        array.map(element=>{
+            if(element.id === ID){
+                realCart.push(element);
+            }
+        })
+    })
+    return realCart;
+}
