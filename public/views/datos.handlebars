@@ -1,30 +1,13 @@
 {{!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
+
 {{!-- Bienvenida al usuario --}}
 <div style="display:flex;">
   <h1 class="mx-4">
   Bienvenido {{user}}
 </h1>
 <button class="btn btn-primary mx-4" onclick = window.location.href='/logout';>Desloguearse</button>
+<button onclick="location.href='/buyersInfo';" class="btn btn-primary mx-4">  ir al mi info==></button>
 </div>
-{{!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
-{{!-- Formulario de ingreso de productos --}}
-<h1 class="mx-4 mt-3">Agregue su producto</h1>
-<form onsubmit="return addProduct()" class="mx-4 mt-3">
-  <div class="mb-3">
-    <label for="tittleInput" class="form-label">Nombre</label>
-    <input type="text" class="form-control" id="tittleInput" aria-describedby="emailHelp" name="tittle">
-  </div>
-  <div class="mb-3">
-    <label for="priceInput" class="form-label">Precio</label>
-    <input type="number" class="form-control" id="priceInput" aria-describedby="emailHelp" name="price">
-  </div>
-    <div class="mb-3">
-    <label for="thumbnailInput" class="form-label">Url imagen</label>
-    <input type="text" class="form-control" id="thumbnailInput" aria-describedby="emailHelp" name="thumbnail">
-  </div>
-  <button type="submit" class="btn btn-primary">Agregar producto</button>
-</form>
-
 {{!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
 {{!-- Tabla de productos --}}
 <h1 class="mt-5 mx-4">Productos</h1>
@@ -41,7 +24,7 @@
 
 
 {{!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
-{{!-- Chat --}}
+{{!-- Chat
 <div id="compresionMsjs" class="d-flex justify-content-center"></div>
 <div class="d-flex justify-content-center">
   <form onsubmit="return addMessage()" class="mt-5 mx-4">
@@ -59,7 +42,7 @@
 </div>
 <div class="d-flex justify-content-center">
   <div id="messages" class="mx-4" ></div>
-</div>
+</div> --}}
     <script src="main.js"></script>
 
 

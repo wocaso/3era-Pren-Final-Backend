@@ -1,0 +1,19 @@
+
+{{!-- Bienvenida al usuario --}}
+<div style="display:flex;">
+  <h1 class="mx-4">
+  Bienvenido {{user}}
+</h1>
+<button class="btn btn-primary mx-4" onclick = window.location.href='/logout';>Desloguearse</button>
+<button onclick="location.href='/datos';" class="btn btn-primary mx-4"> <== ir al catalogo</button>
+</div>
+<div class="card mx-4" style="width: 18rem;">
+  <img src={{picture}} class="card-img-top" alt="...">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Email: {{user}}</li>
+    <li class="list-group-item">Nombre: {{name}}</li>
+    <li class="list-group-item">Edad: {{age}}</li>
+    <li class="list-group-item">Direccion: {{dir}}</li>
+    <li class="list-group-item">Telefono: {{phone}}</li>
+  </ul>
+</div>

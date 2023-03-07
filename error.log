@@ -1,0 +1,24 @@
+{"_message":"usuarios validation failed","errors":{"age":{"kind":"Number","message":"Cast to Number failed for value \"[Function: verified]\" (type function) at path \"age\"","name":"CastError","path":"age","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"[Function: verified]\"","valueType":"function"}},"level":"error","message":"usuarios validation failed: age: Cast to Number failed for value \"[Function: verified]\" (type function) at path \"age\"","name":"ValidationError"}
+{"_message":"usuarios validation failed","errors":{"age":{"kind":"Number","message":"Cast to Number failed for value \"[Function: verified]\" (type function) at path \"age\"","name":"CastError","path":"age","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"[Function: verified]\"","valueType":"function"}},"level":"error","message":"usuarios validation failed: age: Cast to Number failed for value \"[Function: verified]\" (type function) at path \"age\"","name":"ValidationError"}
+{"_message":"usuarios validation failed","errors":{"age":{"kind":"Number","message":"Cast to Number failed for value \"[Function: verified]\" (type function) at path \"age\"","name":"CastError","path":"age","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"[Function: verified]\"","valueType":"function"}},"level":"error","message":"usuarios validation failed: age: Cast to Number failed for value \"[Function: verified]\" (type function) at path \"age\"","name":"ValidationError"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"address":"ac-om1sbzo-shard-00-02.cmoai1f.mongodb.net:27017","level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}

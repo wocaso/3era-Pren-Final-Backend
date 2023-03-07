@@ -51,7 +51,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 //-------------------------------------------------------------------------------------------------------//
-//MongoDB y faker//
+//MongoDB
 //-------------------------------------------------------------------------------------------------------//
 //importo los modelos
 const {
@@ -121,6 +121,11 @@ passport.use(
                         password,
                     };
                     newUser.password = hash;
+                    newUser.name = req.body.name;
+                    newUser.age = req.body.age;
+                    newUser.dir = req.body.dir;
+                    newUser.phone = req.body.phone;
+                    newUser.picture = req.body.picture;
                     mongooseDBusers.addNew(newUser).then((res) => {
                         done(null, res);
                     });
@@ -200,6 +205,8 @@ passport.deserializeUser((username, done) => {
 
 
 
+
+
 //-------------------------------------------------------------------------------------------------------//
 //Inicializacion del server y gets.//
 //-------------------------------------------------------------------------------------------------------//
@@ -257,10 +264,32 @@ app.get("/faillogin", (req, res) => {
 //----------------------------//
 //    Rutas datos
 //----------------------------//
-
+let userInfo
 app.get("/datos", requireAuthentication, (req, res) => {
     res.render("datos", {
         user: req.session.passport.user
+    });
+    mongooseDBusers.getByUser(req.session.passport.user).then((res) => {
+        if(res != undefined){
+            userInfo = res;
+        }
+    });
+    console.log(userInfo)
+
+
+    showReqDataInfo(req)
+});
+//----------------------------//
+//    Rutas carrito y userData
+//----------------------------//
+app.get("/buyersInfo", requireAuthentication, (req, res) => {
+    res.render("buyersInfo", {
+        user: userInfo[0].username,
+        name: userInfo[0].name,
+        age: userInfo[0].age,
+        dir: userInfo[0].dir,
+        picture: userInfo[0].picture,
+        phone: userInfo[0].phone,
     });
     showReqDataInfo(req)
 });
@@ -289,92 +318,13 @@ app.get("*", (req, res) => {
 
 io.on("connection", (socket) => {
     console.log("un cliente se ha conectado");
-    socket.emit("messages", mensajess);
     socket.emit("products", itemss);
-    socket.on("new-message", (data) => {
-        mensajess.messages.push(data)
-        socket.emit("messages", mensajess);
-    });
     socket.on("new-producto", (data) => {
         itemss.push(data);
         socket.emit("products", itemss);
     });
 });
 
-const mensajess = [
-    {
-            author: {
-                email: "Eduardo@gmail.com",
-                nombre: "Eduardo",
-                apellido: "Bustamante",
-                edad: "20",
-                alias: "Edu",
-                avatar: "Hermoso avatar.jpg",
-            },
-            text: "Holis",
-            id: 0,
-        },
-        {
-            author: {
-                email: "Eduardo@gmail.com",
-                nombre: "Eduardo",
-                apellido: "Bustamante",
-                edad: "20",
-                alias: "Edu",
-                avatar: "Hermoso avatar.jpg",
-            },
-            text: "Alguien me responde",
-            id: 1,
-        },
-        {
-            author: {
-                email: "Eduardo@gmail.com",
-                nombre: "Eduardo",
-                apellido: "Bustamante",
-                edad: "20",
-                alias: "Edu",
-                avatar: "Hermoso avatar.jpg",
-            },
-            text: "Bueno",
-            id: 2,
-        },
-        {
-            author: {
-                email: "Carla@gmail.com",
-                nombre: "Carla",
-                apellido: "Lopez",
-                edad: "30",
-                alias: "Carli",
-                avatar: "Feo avatar.jpg",
-            },
-            text: "ei hola",
-            id: 3,
-        },
-        {
-            author: {
-                email: "Carla@gmail.com",
-                nombre: "Carla",
-                apellido: "Lopez",
-                edad: "30",
-                alias: "Carli",
-                avatar: "Feo avatar.jpg",
-            },
-            text: "Hola hola hola",
-            id: 4,
-        },
-        {
-            author: {
-                email: "Carla@gmail.com",
-                nombre: "Carla",
-                apellido: "Lopez",
-                edad: "30",
-                alias: "Carli",
-                avatar: "Feo avatar.jpg",
-            },
-            text: "bueno.....",
-            id: 5,
-        },
-];
 
 const itemss = [{
         id: 1,
