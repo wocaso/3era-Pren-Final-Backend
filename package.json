@@ -16,5 +16,24 @@
     "twilio": "^4.8.0",
     "winston": "^3.8.2",
     "yargs": "^17.7.1"
-  }
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "3era-preentrega-final",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wocaso/3era-Pren-Final-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wocaso/3era-Pren-Final-Backend/issues"
+  },
+  "homepage": "https://github.com/wocaso/3era-Pren-Final-Backend#readme",
+  "description": ""
 }
